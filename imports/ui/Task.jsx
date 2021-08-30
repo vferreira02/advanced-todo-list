@@ -11,6 +11,7 @@ export const Task = ({task, onCheckboxClick,onDeleteClick}) =>{
        />
        <span>{task.text}</span> 
        <button onClick={()=> onDeleteClick(task)}>&times;</button>  
+       <button className="edit-task">Edit</button>
     </li>
     );
 };

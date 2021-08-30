@@ -45,8 +45,8 @@ export const LoginForm = () => {
             <button type="submit">Log In</button>
             </div>
 
-            <div className="newUse">
-                <a href={N_User}>Create New User</a>
+            <div className="newUse" onClick={N_User}>
+               <button>Create New User</button>
             </div>
            
         </form>

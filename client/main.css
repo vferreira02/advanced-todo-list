@@ -127,14 +127,22 @@ header{
   background-color: #ff3046;
 }
 
+.edit-task{
+  margin-left: 2px;
+  background-color: yellow;
+
+}
+
 .filter{
   display: flex;
   justify-content: center;
 }
 
+
 .filter > button{
   background-color: #62807e;
 }
+
 
 .login-form{
   display: flex;
