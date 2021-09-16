@@ -1,20 +1,43 @@
 import {Meteor} from 'meteor/meteor';
-import React, {useState} from 'react';
-
+import React, {useState } from 'react';
+import { useHistory } from 'react-router';
+import {useTracker} from 'meteor/react-meteor-data';
+import { Button, Checkbox, FormGroup, FormControlLabel } from '@material-ui/core';
 
 
 export const TaskForm = () => {
-    const [text, setText] = useState('');
 
+    const user=useTracker(() => Meteor.user());
+
+    let username_db = user.username;
+    
+
+    const history = useHistory();
+    
+    const [text, setText] = useState('');
+    const [description, setDescription] = useState('');
+    const [status, setStatus] = useState("Registered");
+    const [personal, setPersonal]=useState(false);
+ 
+    const username = username_db;
+    
+    
     const handleSubmit = e => {
         e.preventDefault();
     
 
     if(!text) return;
     
-    Meteor.call('tasks.insert',text);
+    Meteor.call('tasks.insert',text,username,description,status,personal);
+
+    history.push("/view-task")
 
     setText('');
+    setDescription('No Description Registred');
+    setPersonal('');
+    
+   
+
     };
 
     return (
@@ -25,9 +48,29 @@ export const TaskForm = () => {
             value={text}
             onChange={e => setText(e.target.value)}
             />
-        
+            <input
+            type="textarea"
+            placeholder="Type here the description"
+            value={description}
+            onChange={e=>setDescription(e.target.value)}           
+            />
 
-        <button type="submit">Add Task</button>
+                    <FormGroup row>
+                        <FormControlLabel
+                                control={
+                        
+                                    <Checkbox
+                                            defaultChecked={false}
+                                            name="personal"
+                                            onClick={e => setPersonal(true)}
+                                    />
+                                    }
+                            label="Personal"
+                    />
+                    </FormGroup>
+            
+           
+        <Button type="submit">Add Task</Button>
         </form>
     );
 };

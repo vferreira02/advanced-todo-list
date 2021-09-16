@@ -3,8 +3,13 @@ import React, {Fragment, useState} from 'react';
 import {useTracker} from 'meteor/react-meteor-data';
 import { TasksCollection } from '/imports/db/TasksCollection';
 import { Task } from './Task';
-import { TaskForm } from './TaskForm';
 import { LoginForm } from './LoginForm';
+import { TaskForm } from './TaskForm';
+
+import { Card, CardActionArea, Grid } from '@material-ui/core';
+import { CardContent } from '@material-ui/core'
+import ResponsiveDrawer from './Drawer';
+import Cards from './Cards';
 
 //Verificar se a tarefa foi marcada
 const toggleChecked = ({_id, isChecked}) => 
@@ -56,14 +61,22 @@ const pendingTasksTitle = `${pendingTasksCount ? `(${pendingTasksCount})`: ''} `
 
   const logout = () => Meteor.logout();
 
+
+  const tasks_total = TasksCollection.find().count();
+
+  const concluded  = TasksCollection.find({status:"Concluded"}).count();
+  const inDevelopment = TasksCollection.find({status:"In Development"}).count();
+  
+  const myTasks = TasksCollection.find(({personal:true})).count();
+
+  console.log(myTasks);
+
   return (
         <div className="app">
           <header>
             <div className="app-bar">
                 <div className="app-header">
-                      <h1>To-do List 
-                          {pendingTasksTitle}
-                      </h1>
+                
                   </div>
               </div>
           </header>
@@ -71,35 +84,45 @@ const pendingTasksTitle = `${pendingTasksCount ? `(${pendingTasksCount})`: ''} `
           <div className="main">
             {user ? (
               <Fragment>
-                  <div className="user" onClick={logout}>
-                    {user.username} 🚪
-                  </div>
-                  
-              <TaskForm />
-
-                  <div className="filter">
-                    <button onClick={()=>setHideCompleted(!hideCompleted)}>
-                      {hideCompleted ? 'Show All':'Hide Completed'}
-                    </button>
-                  </div>
-
-                  {isLoading && <div className="loading">loading...</div>}
-
-                      <ul className="tasks">
-                        {tasks.map(task => (
-                        <Task 
-                        key={task._id} 
-                        task={ task } 
-                        onCheckboxClick={toggleChecked}
-                        onDeleteClick={deleteTask}
-                        />
-                      ))}
-                      </ul>
+                <h2>Welcome to The Advanced TO DO List</h2>
+                  <Cards/>
+                  <ResponsiveDrawer/>
                       </Fragment>
             ): (
               <LoginForm/>
               )}
           </div>
+          
        </div>
       );
 };
+
+
+/*                      <ul className="tasks">
+                            {tasks.map(task => (
+                            <Task 
+                            key={task._id} 
+                            task={ task } 
+                            onCheckboxClick={toggleChecked}
+                            onDeleteClick={deleteTask}
+                            />
+                          ))}
+                      </ul>*/
+
+
+
+
+/*
+
+=================================== SHOW AND HIDE ==========================================
+
+                <div className="filter">
+                      <button onClick={()=>setHideCompleted(!hideCompleted)}>
+                        {hideCompleted ? 'Show All':'Hide Completed'}
+                      </button>
+                </div>
+
+                  {isLoading && <div className="loading">loading...</div>}
+                    
+
+*/

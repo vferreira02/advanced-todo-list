@@ -13,14 +13,22 @@ TasksCollection.insert({
 });
 
 
-const SEED_USERNAME = 'meteorite';
-const SEED_PASSWORD = 'password';
+const SEED_USERNAME = '123456789';
+const SEED_PASSWORD = '123456789';
 
 Meteor.startup(() => {
   if(!Accounts.findUserByUsername(SEED_USERNAME)){
     Accounts.createUser({
       username:SEED_USERNAME,
       password: SEED_PASSWORD,
+        profile : {
+            name: null,
+            email: null,
+            birthday:null,
+            sex:null,
+            company:null,
+            picture:null
+}
     });
   }
   const user = Accounts.findUserByUsername(SEED_USERNAME);
