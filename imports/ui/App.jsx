@@ -84,7 +84,7 @@ const pendingTasksTitle = `${pendingTasksCount ? `(${pendingTasksCount})`: ''} `
           <div className="main">
             {user ? (
               <Fragment>
-                <h2>Welcome to The Advanced TO DO List</h2>
+                <br/>
                   <Cards/>
                   <ResponsiveDrawer/>
                       </Fragment>
