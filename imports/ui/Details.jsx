@@ -40,25 +40,25 @@ export const Details = () => {
       const result  = task.personal ? "yes " : " no";
 
      
-      const [status, setStatus] = useState(task.status);
 
-      
 
-      const handleChange = (e) =>{
+      const [status, setStatus] = useState('');
+      const [value, setValue] = useState('');
+
+      useEffect(()=>{
+        setStatus(task.status);
+      },[])
+   
+      const handleChange = (e) => {
+        setValue(e.target.value);
         
-        setStatus(e.target.value);
-       
-        //const status = e.target.value;
+        console.log(value);
 
-        console.log(status);
-        Meteor.call('tasks.update',{
-            $set : {
-                status : status
-            }
-        },(e, r) =>{console.log(e, r)})
+        Meteor.call('tasks.status', status,task._id,(e, r) =>{console.log(e, r)});
 
-
-      }
+      };
+      
+    
 
 
 
@@ -88,10 +88,10 @@ export const Details = () => {
             <FormControl variant="outlined">
                      <Select
                         native
-                        value={task.status}
+                        value={value}
                         onChange={handleChange}
                                 >
-                                <option aria-label="None" value="" />
+                                <option aria-label="None" value=""/>
                                 <option value="Registered">Registered</option>
                                 <option value="In Development">In Development</option>
                                 <option value="Concluded">Concluded</option>

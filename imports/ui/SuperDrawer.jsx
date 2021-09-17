@@ -18,7 +18,8 @@ import {AppBar,
   Typography,
   Button,
   makeStyles, 
-  useTheme
+  useTheme,
+  TextField
 } from '@material-ui/core/';
 
 
@@ -80,13 +81,16 @@ function SuperDrawer(props) {
       
       <Fragment>
 
-                <img src={user.profile.picture} height="100px" />
+                <img id="profile-picture"
+                src={user.profile.picture} 
+                height="100px"  />
                 <br/>
-                 Hi, {user.username}!
+                 <Typography align="center">Hi, {user.username}!</Typography>
                  <br/>
-                 {user.profile.email}
+                 <Typography align="center">{user.profile.email}</Typography>
                  <Button
-                 size="small"
+                  id="profile-settings"
+                  size="small"
                   onClick={() => {history.push('/user-profile')}}
                   >
                   Profile Settings
@@ -159,6 +163,14 @@ function SuperDrawer(props) {
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
+        <Typography
+        align="center"
+        variant="h5"
+        component="h1"
+        >
+          Hi {user.username}! <br/>Welcome to the To Do List Advanced
+        </Typography>
+        <br/>
         <Cards/>
       </main>
     </div>

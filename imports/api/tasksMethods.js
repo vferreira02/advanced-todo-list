@@ -51,6 +51,27 @@ Meteor.methods({
                 }
     })
     },
+
+    'tasks.status'(status, taskId){
+        console.log(typeof status, typeof taskId)
+
+        if(!this.userId){
+            throw new Meteor.Error('Not Authorized');
+        }
+
+        const task = TasksCollection.findOne({ _id: taskId, userId: this.userId });
+        
+        if (!task){
+            throw new Meteor.Error('Access Denied.');
+        }
+            TasksCollection.update(taskId, {
+                $set : {
+                    status : status,
+                    createdAt : new Date(),
+                    userId : this.userId,
+                }
+    })
+    },
     /*
     'tasks.update'(text, description,status,personal, taskId){
         check(taskId, String);
