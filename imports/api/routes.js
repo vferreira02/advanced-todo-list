@@ -15,6 +15,7 @@ import {
   import ResponsiveDrawer  from '../ui/Drawer';
   import { RegisterUser} from '../ui/RegisterUser';
   import { UserProfile } from '../ui/UserProfile';
+import SuperDrawer from '../ui/SuperDrawer';
 
 
 

@@ -2,12 +2,36 @@ import {Meteor} from 'meteor/meteor';
 import { Accounts} from 'meteor/accounts-base';
 import React, {useState} from 'react';
 import { useHistory } from 'react-router';
+import { TextField, Typography, Button, makeStyles } from '@material-ui/core';
 
+const useStyle  = makeStyles( theme => ({
+  
+    root:{
 
+    '& .MuiFormControl-root' : {
+     width: '90%',
+
+      margin: theme.spacing(2)
+
+    },
+
+    '& .MuiButtonBase-root' : {
+      margin : theme.spacing(2),
+      background: '#e4f3ff',
+    },
+
+    '&.MuiTypography-root ' :{
+
+    }
+
+  }
+
+}));
 
 
 export const RegisterUser = () =>{
-    
+
+    const classes = useStyle();
     const history = useHistory();
 
     const [username, setUsername] = useState('');
@@ -46,32 +70,43 @@ export const RegisterUser = () =>{
         };
 
     return (
-        <form onSubmit={handleSubmit} className="login-form">
+        <form onSubmit={handleSubmit} className={classes.root}>
+          
+            <Typography 
+            variant="h6"
+            component="h1" 
+            align="center"> 
+            Register New User
+            </Typography>
+            <br/>
             <div>
-            <label htmlFor="username">Username</label>
-            <input
+            <TextField
             type="text" 
+            variant="outlined"
             placeholder="Username" 
             name="username"
             required
             onChange={e => setUsername(e.target.value)}
             />
             </div>
-
+            <br/>
             <div>
-            <label htmlFor="password">Password</label>
-
-            <input 
+           
+            <TextField 
             type="password"
+            variant="outlined"
             placeholder="Password"
             name="password"
             required
             onChange={e => setPassword(e.target.value)}
             />
             </div>
-
+            <br/>
             <div>
-            <button type="submit">Save</button>
+            <Button type="submit">Save</Button>
+            <Button
+            onClick={()=>history.push('/login-form')}
+            >Go Back</Button>
             </div>
             </form>
     );

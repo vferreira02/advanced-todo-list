@@ -1,7 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import React, {Fragment} from 'react';
 import {useTracker} from 'meteor/react-meteor-data';
-import { LoginForm } from './LoginForm';
 import { useHistory } from 'react-router';
 import { TaskForm } from './TaskForm';
 
@@ -20,7 +19,7 @@ export const UserLogout = () => {
             {user ? (
               <Fragment>
                   <div className="user" onClick={logout}>
-                    {user.username} 🚪
+                    Log out 🚪
                   </div>
                       </Fragment>
             ): (

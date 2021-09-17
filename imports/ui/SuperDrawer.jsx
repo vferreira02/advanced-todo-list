@@ -1,37 +1,39 @@
-import React, {Fragment}  from 'react';
+import React, {Fragment} from 'react';
 import {Meteor} from 'meteor/meteor';
 import {useTracker} from 'meteor/react-meteor-data';
-import {useHistory } from 'react-router-dom';
-import { UserLogout } from './UserLogout';
+import { useHistory } from 'react-router';
 import { LoginForm } from './LoginForm';
-import { Cards } from './Cards';
-//IMPORTS FROM MATERIAL UI
-import PropTypes from 'prop-types';
-import {AppBar,
+import { UserLogout } from './UserLogout';
+import Cards from './Cards';
+import MenuIcon from '@material-ui/icons/Menu';
+
+//IMPORTS FORM MATERIAL CORE
+import {AppBar, 
+  CssBaseline,
   Divider,
   Drawer,
   Hidden,
   IconButton,
   Toolbar,
-  Button
+  Typography,
+  Button,
+  makeStyles, 
+  useTheme
 } from '@material-ui/core/';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import MenuIcon from '@material-ui/icons/Menu';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
 
-const drawerWidth = 200;
+
+
+const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'fit',
+    display: 'flex',
   },
   drawer: {
     [theme.breakpoints.up('sm')]: {
       width: drawerWidth,
       flexShrink: 0,
-      marginTop:20
     },
-   
   },
   appBar: {
     [theme.breakpoints.up('sm')]: {
@@ -52,18 +54,19 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(6),
+    padding: theme.spacing(3),
+    marginTop:25
   },
+
 }));
 
-function ResponsiveDrawer(props) {
-  const user=useTracker(() => Meteor.user());
-  const history = useHistory();
+function SuperDrawer(props) {
   const { window } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
+  const user = useTracker(() => Meteor.user());
+  const history = useHistory(); 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -71,10 +74,11 @@ function ResponsiveDrawer(props) {
   const drawer = (
     <div>
       <div className={classes.toolbar} />
-      
+      <Divider />
+
       {user ? (
-              <Fragment>
-               
+      
+      <Fragment>
 
                 <img src={user.profile.picture} height="100px" />
                 <br/>
@@ -89,15 +93,16 @@ function ResponsiveDrawer(props) {
                   </Button>
                   <br/>
                   <Divider/>
-
                   
-                <UserLogout/>
-                
-              </Fragment>
-                 
-                 ): (
-                  <LoginForm/>
-                  )}
+                  <UserLogout/>
+
+      </Fragment>
+    ): (
+      <LoginForm/>
+      )}
+     
+      <Divider />
+     
     </div>
   );
 
@@ -117,10 +122,12 @@ function ResponsiveDrawer(props) {
           >
             <MenuIcon />
           </IconButton>
-          
+          <Typography variant="h6"  noWrap>
+            Super To-Do List
+          </Typography>
         </Toolbar>
       </AppBar>
-      <nav className={classes.drawer} >
+      <nav className={classes.drawer} aria-label="mailbox folders">
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation="css">
           <Drawer
@@ -151,23 +158,10 @@ function ResponsiveDrawer(props) {
         </Hidden>
       </nav>
       <main className={classes.content}>
-     
         <div className={classes.toolbar} />
-
-      
-      
+        <Cards/>
       </main>
-     
     </div>
   );
 }
-
-ResponsiveDrawer.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  window: PropTypes.func,
-};
-
-export default ResponsiveDrawer;
+export default SuperDrawer;

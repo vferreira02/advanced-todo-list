@@ -2,14 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import React, {Fragment, useState} from 'react';
 import {useTracker} from 'meteor/react-meteor-data';
 import { TasksCollection } from '/imports/db/TasksCollection';
-import { Task } from './Task';
 import { LoginForm } from './LoginForm';
-import { TaskForm } from './TaskForm';
-
-import { Card, CardActionArea, Grid } from '@material-ui/core';
-import { CardContent } from '@material-ui/core'
-import ResponsiveDrawer from './Drawer';
-import Cards from './Cards';
+import SuperDrawer from './SuperDrawer';
 
 //Verificar se a tarefa foi marcada
 const toggleChecked = ({_id, isChecked}) => 
@@ -72,28 +66,18 @@ const pendingTasksTitle = `${pendingTasksCount ? `(${pendingTasksCount})`: ''} `
   console.log(myTasks);
 
   return (
-        <div className="app">
-          <header>
-            <div className="app-bar">
-                <div className="app-header">
-                
-                  </div>
-              </div>
-          </header>
-
+    <>
           <div className="main">
             {user ? (
               <Fragment>
                 <br/>
-                  <Cards/>
-                  <ResponsiveDrawer/>
+                  <SuperDrawer/>
                       </Fragment>
             ): (
               <LoginForm/>
               )}
           </div>
-          
-       </div>
+       </>
       );
 };
 

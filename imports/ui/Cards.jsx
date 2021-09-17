@@ -49,12 +49,13 @@ function Cards(){
 
     const concluded  = TasksCollection.find({status:"Concluded"}).count();
     const inDevelopment = TasksCollection.find({status:"In Development"}).count();
+    const personalTasks = TasksCollection.find({personal:true}).count();
   
 
   return (
       <>
        <Grid container 
-                      spacing={4} 
+                      spacing={5} 
                       justifyContent="center"
                       margin={2}
                       className="gridContainer"
@@ -103,7 +104,7 @@ function Cards(){
                         <CardActionArea>                
                         <CardContent>
                         <h1>
-                          My Personal Tasks
+                         {personalTasks} My Personal Tasks
                           </h1>
                         
                         </CardContent>

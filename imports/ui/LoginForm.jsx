@@ -1,11 +1,11 @@
+import { TextField, Typography, Button } from '@material-ui/core';
 import { Meteor } from 'meteor/meteor';
 import React, {useState} from 'react';
 import { useHistory } from 'react-router';
-import { Link } from 'react-router-dom';
 
 
 export const LoginForm = () => {
-
+    
     const history = useHistory();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -23,10 +23,15 @@ export const LoginForm = () => {
     return (
         <>
         <form onSubmit={submit} className="login-form">
+            <Typography 
+            variant="h6"
+            component="h1" > 
+            Welcome to you TO DO List 
+            </Typography>
             <div>
-            <label htmlFor="username">Username</label>
-            <input
+            <TextField
             type="text" 
+            variant="outlined"
             placeholder="Username" 
             name="username"
             required
@@ -35,10 +40,10 @@ export const LoginForm = () => {
             </div>
 
             <div>
-            <label htmlFor="password">Password</label>
-
-            <input 
+           
+            <TextField 
             type="password"
+            variant="outlined"
             placeholder="Password"
             name="password"
             required
@@ -47,13 +52,17 @@ export const LoginForm = () => {
             </div>
 
             <div>
-            <button type="submit">Log In</button>
+            <Button type="submit">Log In</Button>
             </div>
-
-           
+            <br/>
+            <Button
+            color="primary"
+            variant="outlined"
+            onClick={()=>history.push('/register')}
+            > Register New User</Button>
            
         </form>
-         <Link to={"/register"}>Register New User</Link>
+        
         </>
     );
 };

@@ -6,6 +6,7 @@ import {Button} from '@material-ui/core';
 import {useTracker} from 'meteor/react-meteor-data';
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router';
+import ResponsiveDrawer from './Drawer';
 
 
 
@@ -46,7 +47,7 @@ export const ViewTask = () => {
    
     return (
         <div>
-
+              
             <h1>Tasks</h1>
             <h2>Click on the task to see more Details</h2>
             {isLoading && <div className="loading">loading...</div>}
