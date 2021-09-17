@@ -3,8 +3,7 @@ import React, {useState, useEffect} from 'react';
 import { useHistory, useParams } from 'react-router';
 import { TasksCollection } from '../db/TasksCollection';
 import {useTracker} from 'meteor/react-meteor-data';
-import { Button, FormControl, InputLabel, Select,} from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import { Button, FormControl,  Select} from '@material-ui/core';
 
 
 

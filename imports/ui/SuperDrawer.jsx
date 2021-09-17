@@ -80,7 +80,7 @@ function SuperDrawer(props) {
       {user ? (
       
       <Fragment>
-
+                <br/>
                 <img id="profile-picture"
                 src={user.profile.picture} 
                 height="100px"  />
