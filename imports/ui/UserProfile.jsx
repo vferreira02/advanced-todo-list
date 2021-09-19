@@ -127,6 +127,7 @@ export const UserProfile = () => {
 
 
   return (
+    <>
 
     <form onSubmit={handleSubmit}>
 
@@ -205,7 +206,7 @@ export const UserProfile = () => {
       <Button onClick={() => { history.push('/') }}>Back</Button>
 
     </form>
-
+    </>
   );
 }
 

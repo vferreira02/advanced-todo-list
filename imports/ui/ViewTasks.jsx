@@ -8,6 +8,7 @@ import {useTracker} from 'meteor/react-meteor-data';
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router';
 import ResponsiveDrawer from './Drawer';
+import PersistentDrawerLeft from './PersistentDrawer';
 
 const useStyle  = makeStyles( theme => ({
   
@@ -45,11 +46,11 @@ export const ViewTask = () => {
     let i = 1;
     const q_tasks = TasksCollection.find().count()
     console.log(q_tasks);
-    const pages_float = q_tasks/4;
+    const pages_float = q_tasks/5;
     console.log(pages_float);
-    const page = parseInt(pages_float);
-    console.log(page+1);
-
+    const n_page = parseInt(pages_float)+1;
+    console.log(n_page);
+    const [page, setPage] = useState(1);
     
     const {tasks, isLoading} = useTracker(()=> {
       const noDataAvailable = {tasks: []};
@@ -69,10 +70,12 @@ export const ViewTask = () => {
       
       
       
-      const limit = 4;
-      const skip = (i-1)*limit;
+      //const limit = 4;
+      //const skip = (i-1)*limit;
+
+     
       
-      const tasks = TasksCollection.find({}, {limit:4,skip:skip}).fetch();
+      const tasks = TasksCollection.find({}, {limit:4,skip:page+1}).fetch();
       
       return { tasks };
     
@@ -83,16 +86,10 @@ export const ViewTask = () => {
    
     return (
         <div>
-              
+            <PersistentDrawerLeft/>
+            <br/><br/><br/><br/><br/><br/>
             <Typography
-            variant="h3"
-            component="h1"
-            align="center"
-
-            >Tasks
-            
-            </Typography>
-            <Typography
+            spacing="4"
             variant="h5"
             component="h2"
             align="center"
@@ -105,9 +102,11 @@ export const ViewTask = () => {
                 />)
 
                 }
-          
-              <Pagination count={page+1}/>
-
+          <br/>
+              <Pagination count={n_page+2}
+              onChange={(e,value) => setPage(value)}
+              />
+          <br/>
             <Button variant="outlined" 
             color="primary"
             className="button-space"

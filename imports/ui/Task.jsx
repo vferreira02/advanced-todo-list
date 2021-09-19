@@ -27,7 +27,7 @@ import { Details } from './Details';
     const useStyles = makeStyles((theme) => ({
     root: {
       width: '100%',
-      
+      marginBottom:'-20px',
       backgroundColor: theme.palette.background.paper,
       justifyContent:'center',
       alignContent:'center',
