@@ -64,7 +64,7 @@ Meteor.methods({
         if (!task){
             throw new Meteor.Error('Access Denied.');
         }
-            TasksCollection.update(taskId, {
+            TasksCollection.update( taskId, {
                 $set : {
                     status : status,
                     createdAt : new Date(),

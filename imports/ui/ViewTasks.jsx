@@ -2,7 +2,7 @@ import React , {useState} from 'react';
 import { Meteor } from 'meteor/meteor';
 import {Task} from './Task';
 import {TasksCollection} from '../db/TasksCollection';
-import {Button, Typography, makeStyles} from '@material-ui/core';
+import {Button, Typography, makeStyles,FormControlLabel,Checkbox, TextField} from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
 import {useTracker} from 'meteor/react-meteor-data';
 import { Link } from 'react-router-dom';
@@ -24,7 +24,7 @@ const useStyle  = makeStyles( theme => ({
     '& .MuiButtonBase-root' : {
       margin : theme.spacing(2),
       background: '#e4f3ff',
-    }
+    },
 
   }
 
@@ -35,6 +35,8 @@ const deleteTask = ({ _id }) => Meteor.call('tasks.remove',_id);
 
 
 
+
+
 export const ViewTask = () => { 
     
     const user=useTracker(() => Meteor.user());
@@ -42,6 +44,11 @@ export const ViewTask = () => {
     const history = useHistory();
     
     const classes = useStyle();
+
+    const [queryString, setQueryString] = useState('');
+    Meteor.subscribe('query',queryString);
+    
+   console.log(queryString);
 
     let i = 1;
     const q_tasks = TasksCollection.find().count()
@@ -75,7 +82,7 @@ export const ViewTask = () => {
 
      
       
-      const tasks = TasksCollection.find({}, {limit:4,skip:page+1}).fetch();
+      const tasks = TasksCollection.find({}, {limit:4,skip:page+2}).fetch();
       
       return { tasks };
     
@@ -87,6 +94,8 @@ export const ViewTask = () => {
     return (
         <div>
             <PersistentDrawerLeft/>
+           
+
             <br/><br/><br/><br/><br/><br/>
             <Typography
             spacing="4"
@@ -94,8 +103,29 @@ export const ViewTask = () => {
             component="h2"
             align="center"
             >Click on the task to see more Details</Typography>
+             <FormControlLabel
+            control={<Checkbox //checked={state.checkedA} 
+            //onChange={handleChange} 
+            name="checkedA" />}
+            label="Show all tasks included Concluded tasks"
+           />
+           <br/>
+           <TextField
+           type="text"
+           label="Search"
+           variant="outlined"           
+           onChange={e => setQueryString( e.target.value)}
+           
+           />
             {isLoading && <div className="loading">loading...</div>}
-            { tasks.map(task => <Task
+            
+            { tasks.filter((task) =>{
+              if(queryString === ""){
+                return task
+              } else if(task.text.includes(queryString)){
+                return task
+              }
+            }).map(task => <Task
                 key={ task._id }
                 task={ task }
                 onDeleteClick={deleteTask}
@@ -103,7 +133,7 @@ export const ViewTask = () => {
 
                 }
           <br/>
-              <Pagination count={n_page+2}
+              <Pagination count={n_page+1}
               onChange={(e,value) => setPage(value)}
               />
           <br/>

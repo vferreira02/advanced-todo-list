@@ -13,7 +13,18 @@ Meteor.publish('tasks', function publishTasks(){
             
     });
 
+
+Meteor.publish('query', function queryString(){
     
+    return TasksCollection.find({
+        queryString : {
+            $regex : queryString
+            
+        }
+
+    
+    });
+});
 
     
 

@@ -56,10 +56,6 @@ export const Details = () => {
         Meteor.call('tasks.status', status,task._id,(e, r) =>{console.log(e, r)});
 
       };
-      
-    
-
-
 
     return (
         <>
