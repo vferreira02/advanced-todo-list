@@ -11,9 +11,15 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
-  Input
+  Input,
+  Container,
+  Avatar
 } from '@material-ui/core';
 import { useHistory } from 'react-router';
+import {PersistentDrawer} from './PersistentDrawer';
+
+
+
 
 
 
@@ -127,7 +133,9 @@ export const UserProfile = () => {
 
 
   return (
-    <>
+    <div className="user-profile-fix">
+
+    <Container>
 
     <form onSubmit={handleSubmit}>
 
@@ -135,7 +143,10 @@ export const UserProfile = () => {
 
       <List>
 
-        <img src={picture} height="100px" />
+        <Avatar src={picture} 
+         style={{width:130, height : 130,}}
+        
+        />
 
         <ListItem>
 
@@ -206,7 +217,9 @@ export const UserProfile = () => {
       <Button onClick={() => { history.push('/') }}>Back</Button>
 
     </form>
-    </>
+
+    </Container>
+    </div>
   );
 }
 

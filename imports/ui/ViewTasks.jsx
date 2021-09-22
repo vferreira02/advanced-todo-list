@@ -1,28 +1,26 @@
-import React , {useState} from 'react';
+import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
-import {Task} from './Task';
-import {TasksCollection} from '../db/TasksCollection';
-import {Button, Typography, makeStyles,FormControlLabel,Checkbox, TextField} from '@material-ui/core';
+import { Task } from './Task';
+import { TasksCollection } from '../db/TasksCollection';
+import { Button, Typography, makeStyles, FormControlLabel, Checkbox, TextField } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
-import {useTracker} from 'meteor/react-meteor-data';
-import { Link } from 'react-router-dom';
+import { useTracker } from 'meteor/react-meteor-data';
 import { useHistory } from 'react-router';
-import ResponsiveDrawer from './Drawer';
-import PersistentDrawerLeft from './PersistentDrawer';
+import PersistentDrawer from './PersistentDrawer';
 
-const useStyle  = makeStyles( theme => ({
-  
-    root:{
+const useStyle = makeStyles(theme => ({
 
-    '& .MuiFormControl-root' : {
-     width: '90%',
+  root: {
+
+    '& .MuiFormControl-root': {
+      width: '90%',
 
       margin: theme.spacing(2)
 
     },
 
-    '& .MuiButtonBase-root' : {
-      margin : theme.spacing(2),
+    '& .MuiButtonBase-root': {
+      margin: theme.spacing(2),
       background: '#e4f3ff',
     },
 
@@ -31,137 +29,132 @@ const useStyle  = makeStyles( theme => ({
 }));
 
 // CONSTANT CREATE TO DELETE THE TASK
-const deleteTask = ({ _id }) => Meteor.call('tasks.remove',_id);
+const deleteTask = ({ _id }) => Meteor.call('tasks.remove', _id);
+
+
+export const ViewTask = () => {
+
+  const user = useTracker(() => Meteor.user());
+
+  const history = useHistory();
+
+  const classes = useStyle();
+
+  const [queryString, setQueryString] = useState('');
+  console.log(queryString);
+
+
+
+  const q_tasks = TasksCollection.find().count()
+  console.log(q_tasks);
+  const pages_float = q_tasks / 4;
+  console.log(pages_float);
+  const n_page = parseInt(pages_float) + 2;
+  console.log(n_page);
+
+  const [page, setPage] = useState(1);
 
 
 
 
+  const { tasks, isLoading } = useTracker(() => {
+    const noDataAvailable = { tasks: [] };
+    if (!Meteor.user()) {
+      return noDataAvailable;
+    }
 
-export const ViewTask = () => { 
-    
-    const user=useTracker(() => Meteor.user());
-    
-    const history = useHistory();
-    
-    const classes = useStyle();
+    const handler = Meteor.subscribe('tasks-todo', page, queryString);
 
-    const [queryString, setQueryString] = useState('');
-    Meteor.subscribe('query',queryString);
-    
-   console.log(queryString);
+    if (!handler.ready()) {
+      return { ...noDataAvailable, isLoading: true };
+    }
 
-    let i = 1;
-    const q_tasks = TasksCollection.find().count()
-    console.log(q_tasks);
-    const pages_float = q_tasks/5;
-    console.log(pages_float);
-    const n_page = parseInt(pages_float)+1;
-    console.log(n_page);
-    const [page, setPage] = useState(1);
-    
-    const {tasks, isLoading} = useTracker(()=> {
-      const noDataAvailable = {tasks: []};
-      if(!Meteor.user()) {
-        return noDataAvailable;
+    //const limit = 4;
+    //const skip = (i-1)*limit;
+
+    const tasks = TasksCollection.find().fetch();
+    console.log(tasks);
+    //const tasks = TasksCollection.find({}, {limit:4,skip:page+2}).fetch();
+
+    return { tasks };
+
+  });
+
+  //Meteor.subscribe('pagination', page);
+
+
+  return (
+    <div>
+      <PersistentDrawer />
+
+
+      <br /><br /><br /><br /><br /><br />
+      <Typography
+        spacing="4"
+        variant="h5"
+        component="h2"
+        align="center"
+      >Click on the task to see more Details</Typography>
+      <FormControlLabel
+        control={<Checkbox //checked={state.checkedA} 
+          //onChange={handleChange} 
+          name="checkedA" />}
+        label="Show all tasks included Concluded tasks"
+      />
+      <br />
+      <TextField
+        name="queryString"
+        type="text"
+        label="Search"
+        variant="outlined"
+        onChange={e => setQueryString(e.target.value)}
+
+      />
+      {isLoading && <div className="loading">loading...</div>}
+
+      {tasks.filter((task) => {
+        if (queryString === "") {
+          return task
+        } else if (task.text.includes(queryString)) {
+          return task
+        }
+      }).map(task => <Task
+        key={task._id}
+        task={task}
+        onDeleteClick={deleteTask}
+      />)
+
       }
-    
-      const handler = Meteor.subscribe('tasks');
-    
-      if(!handler.ready()){
-        return {...noDataAvailable, isLoading: true};
-      }
+      <br />
+      <Pagination count={n_page}
+        onChange={(e, value) => setPage(value)}
+      />
+      <br />
+      <Button variant="outlined"
+        color="primary"
+        className="button-space"
+        onClick={() => { history.push('/add-task') }}
+      >
 
-     
+        Add Task
 
-      
-      
-      
-      
-      //const limit = 4;
-      //const skip = (i-1)*limit;
 
-     
-      
-      const tasks = TasksCollection.find({}, {limit:4,skip:page+2}).fetch();
-      
-      return { tasks };
-    
-    });
-  
+      </Button>
 
-    
-   
-    return (
-        <div>
-            <PersistentDrawerLeft/>
-           
+      <Button variant="contained"
+        color="default"
+        className={classes.root}
+        onClick={() => { history.push('/') }}
+      >
 
-            <br/><br/><br/><br/><br/><br/>
-            <Typography
-            spacing="4"
-            variant="h5"
-            component="h2"
-            align="center"
-            >Click on the task to see more Details</Typography>
-             <FormControlLabel
-            control={<Checkbox //checked={state.checkedA} 
-            //onChange={handleChange} 
-            name="checkedA" />}
-            label="Show all tasks included Concluded tasks"
-           />
-           <br/>
-           <TextField
-           type="text"
-           label="Search"
-           variant="outlined"           
-           onChange={e => setQueryString( e.target.value)}
-           
-           />
-            {isLoading && <div className="loading">loading...</div>}
-            
-            { tasks.filter((task) =>{
-              if(queryString === ""){
-                return task
-              } else if(task.text.includes(queryString)){
-                return task
-              }
-            }).map(task => <Task
-                key={ task._id }
-                task={ task }
-                onDeleteClick={deleteTask}
-                />)
+        Go Back
 
-                }
-          <br/>
-              <Pagination count={n_page+1}
-              onChange={(e,value) => setPage(value)}
-              />
-          <br/>
-            <Button variant="outlined" 
-            color="primary"
-            className="button-space"
-            onClick = {() => {history.push('/add-task')}}
-            >
-                
-                Add Task
-              
-                
-            </Button>
 
-            <Button variant="contained" 
-            color="default"
-            className={classes.root}
-            onClick = {() => {history.push('/')}}
-            >
-                
-                Go Back
-                
-                
-            </Button>
+      </Button>
 
-           
-        </div>
-    );
+
+    </div>
+  );
 
 };
 
@@ -186,9 +179,9 @@ export const ViewTasks = () =>{
         <ul className="tasks">
 
                 {tasks.map(task => (
-                <Task 
-                key={task._id} 
-                task={ task } 
+                <Task
+                key={task._id}
+                task={ task }
                 />
             ))}
 
@@ -204,9 +197,9 @@ export const ViewTasks = () =>{
  <ul className="tasks">
 
                 {tasks.map(task => (
-                <Task 
-                key={task._id} 
-                task={ task } 
+                <Task
+                key={task._id}
+                task={ task }
                 onCheckboxClick={toggleChecked}
                 onDeleteClick={deleteTask}
                 />
@@ -215,13 +208,12 @@ export const ViewTasks = () =>{
         </ul>
 */
 
- /************Teste 1 ***************************** */
-   
+/************Teste 1 ***************************** */
+
     //const [hideCompleted, setHideCompleted] = useState(false); 
-    
+
     //const hideCompletedFilter = { isChecked: { $ne : true } };
-    
+
     //const userFilter = user ? {userId : user._id} : {};
-    
+
     //const pendingOnlyFilter = {...hideCompletedFilter, ...userFilter};
-    

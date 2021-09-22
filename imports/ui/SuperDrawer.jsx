@@ -19,6 +19,7 @@ import {AppBar,
   Button,
   makeStyles, 
   useTheme,
+  Avatar,
   TextField
 } from '@material-ui/core/';
 
@@ -81,9 +82,10 @@ function SuperDrawer(props) {
       
       <Fragment>
                 <br/>
-                <img id="profile-picture"
+                <Avatar 
                 src={user.profile.picture} 
-                height="100px"  />
+                style={{width:130, height : 130, marginLeft : '24%'}}
+                id="profile-picture"  />
                 <br/>
                  <Typography align="center">Hi, {user.username}!</Typography>
                  <br/>
@@ -96,7 +98,7 @@ function SuperDrawer(props) {
                   Profile Settings
                   </Button>
                   <br/>
-                  <Divider/>
+                    <Divider/>
                   
                   <UserLogout/>
 
