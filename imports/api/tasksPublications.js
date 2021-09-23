@@ -2,91 +2,71 @@ import { Meteor } from 'meteor/meteor';
 import { TasksCollection } from '/imports/db/TasksCollection';
 
 
+Meteor.publish('tasks-count', function publishTasks() {
+
+    const personalTasks = {
+        $nor: [{ $and: [{ userId: { $ne: this.userId } }, { personal: { $eq: true } }] }]
+    }
+
+    return TasksCollection.find(personalTasks).count().fetch();
+
+});
+
 Meteor.publish('tasks', function publishTasks() {
 
     const personalTasks = {
-        $nor: [
-            {
-                $and: [
-                    {
-                        userId: {
-                            $ne: this.userId
-                        }
-                    }, {
-                        personal: {
-                            $eq: true
-                        }
-                    }
-                ]
-            }
-        ]
+        $nor: [{ $and: [{ userId: { $ne: this.userId } }, { personal: { $eq: true } }] }]
     }
 
-    return TasksCollection.find(personalTasks);
+    return TasksCollection.find(personalTasks)
 
 });
 
-Meteor.publish('tasks-todo', function publishTasks(page, queryString = null) {
+Meteor.publish('tasks-todo', function publishTasks(page, queryString = "", concludedTasks=false){
 
     let limit = 4;
     let skip = (page - 1) * limit;
-    console.log((page - 1) * 4);
-    console.log(queryString);
-
+    console.log(concludedTasks)
+ 
+    if(concludedTasks == true){
+        console.log('Works');
+        return TasksCollection.find({
+        $nor: [{ $and: [{ userId: { $ne: this.userId } }, { personal: { $eq: true } }] }],
+        $and: [{status : {$ne : "Concluded" }}]
+    }, 
+    {skip: skip, limit : limit})
+}
 
     if (page && queryString) {
         return TasksCollection.find({
-            $nor: [
-                {
-                    $and: [
-                        {
-                            userId: {
-                                $ne: this.userId
-                            }
-                        }, {
-                            personal: {
-                                $eq: true
-                            }
-                        }
-                    ]
-                }
-            ],
-            $and: [
-                {
-                    text: queryString
-                }
-            ]
+            $nor: [{ $and: [{ userId: { $ne: this.userId } }, { personal: { $eq: true } }] }],
+            $and: [{ text: queryString }]
 
-        }, {
-            skip: skip,
-            limit: limit
-        });
+        },
+        { skip: skip, limit: limit }
+
+       
+        );
     }
+
+    
 
     if (page) {
         return TasksCollection.find({
-            $nor: [
-                {
-                    $and: [
-                        {
-                            userId: {
-                                $ne: this.userId
-                            }
-                        }, {
-                            personal: {
-                                $eq: true
-                            }
-                        }
-                    ]
-                }
-            ]
+            $nor: [{ $and: [{ userId: { $ne: this.userId } }, { personal: { $eq: true } }] }],
 
-        }, {
-            skip: skip,
-            limit: limit
-        });
+        },
+            { skip: skip, limit: limit }
+        );
     }
-});
+
+
+
+    
+    }
+    
+    
+);
 /*
     const personalTasks = {
         $nor: [ {$and:[{userId: {$ne: this.userId}},{personal:{$eq:true}}]}]
@@ -136,4 +116,21 @@ Meteor.publish('query', function queryString(){
 
 
 
-//return TasksCollection.find(/*{userId: this.userId});*/
+//return TasksCollection.find(/*{userId: this.userId});
+
+if(checked){
+        checked = new ReactiveVar(true);
+        console.log(checked);
+            return TasksCollection.find({
+                $nor: [{ $and: [{ userId: { $ne: this.userId } }, { personal: { $eq: true } }] }],
+                $and: [{status:"Concluded"}]
+            })
+        } else{
+            return TasksCollection.find({
+                $nor: [{ $and: [{ userId: { $ne: this.userId } }, { personal: { $eq: true } }] }],
+                $and: [{status:"Registered"},{status:"In Development"}]
+            })
+        }
+
+
+*/

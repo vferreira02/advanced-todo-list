@@ -20,7 +20,7 @@ const useStyle  = makeStyles( theme => ({
 
     '& .MuiButtonBase-root' : {
       margin : theme.spacing(2),
-      background: '#e4f3ff',
+     
     }
 
   }
@@ -132,7 +132,9 @@ export const EditForm = () => {
 
         <Button
 
-        type="submit">
+        type="submit"
+        color="primary"
+        variant="contained">
           Save Alterations
           </Button>
 

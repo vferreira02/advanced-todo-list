@@ -27,23 +27,9 @@ import {PersistentDrawer} from './PersistentDrawer';
 export const UserProfile = () => {
 
   const user = useTracker(() => Meteor.user());
-
-  useEffect(()=>{
-   function callProfile() {
-    setLoading(true);  
-   
-   }
-   callProfile();
-  },[user])
-
-  
-
   const history = useHistory();
-  
- 
-    const [loading, setLoading] = useState(false);
 
-  const [init, setInit] = useState('');
+  const [init, setInit] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [birthday, setBirthday] = useState('');
@@ -66,7 +52,7 @@ export const UserProfile = () => {
        setBirthday(user.profile.birthday);
        setCompany(user.profile.company);
        setPicture(user.profile.picture);
-       setSex(user.profile.sex);
+       setValue(user.profile.sex);
      }
     
   
@@ -95,16 +81,12 @@ export const UserProfile = () => {
       fileReader.onerror = (error) => {
         reject(error);
       }
-
     })
-
   }
 
   /****************************** */
   const handleSubmit = e => {
     e.preventDefault();
-
-
     Meteor.users.update(user._id, {
       $set: {
 
@@ -115,39 +97,24 @@ export const UserProfile = () => {
           sex: value,
           company: company,
           picture: picture
-
-
-
         }
-
-
       }
-
-
     });
-
     history.push('/');
-
-
   };
 
 
   return (
-    <div className="user-profile-fix">
-
+    <>
+    <div>
+ 
     <Container>
-
+   
     <form onSubmit={handleSubmit}>
-
-
-
       <List>
-
         <Avatar src={picture} 
          style={{width:130, height : 130,}}
-        
         />
-
         <ListItem>
 
         </ListItem>
@@ -220,6 +187,7 @@ export const UserProfile = () => {
 
     </Container>
     </div>
+    </>
   );
 }
 

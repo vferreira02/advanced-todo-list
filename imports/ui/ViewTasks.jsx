@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Task } from './Task';
 import { TasksCollection } from '../db/TasksCollection';
@@ -7,22 +7,22 @@ import Pagination from '@material-ui/lab/Pagination';
 import { useTracker } from 'meteor/react-meteor-data';
 import { useHistory } from 'react-router';
 import PersistentDrawer from './PersistentDrawer';
+import { ReactiveVar } from 'meteor/reactive-var';
+import { use } from 'chai';
 
 const useStyle = makeStyles(theme => ({
 
   root: {
 
-    '& .MuiFormControl-root': {
-      width: '90%',
-
-      margin: theme.spacing(2)
-
-    },
-
     '& .MuiButtonBase-root': {
       margin: theme.spacing(2),
-      background: '#e4f3ff',
+      
     },
+
+    '& .MuiInputBase-root':{
+      display:'flex',
+      
+    }
 
   }
 
@@ -30,6 +30,7 @@ const useStyle = makeStyles(theme => ({
 
 // CONSTANT CREATE TO DELETE THE TASK
 const deleteTask = ({ _id }) => Meteor.call('tasks.remove', _id);
+const total = () => Meteor.call('tasks-count').count();
 
 
 export const ViewTask = () => {
@@ -41,21 +42,16 @@ export const ViewTask = () => {
   const classes = useStyle();
 
   const [queryString, setQueryString] = useState('');
-  console.log(queryString);
+  //console.log(queryString);
 
 
 
-  const q_tasks = TasksCollection.find().count()
-  console.log(q_tasks);
-  const pages_float = q_tasks / 4;
-  console.log(pages_float);
-  const n_page = parseInt(pages_float) + 2;
-  console.log(n_page);
+
+  const [concludedTasks, setConcludedTasks] = useState(true);
+  console.log(concludedTasks);
 
   const [page, setPage] = useState(1);
-
-
-
+  
 
   const { tasks, isLoading } = useTracker(() => {
     const noDataAvailable = { tasks: [] };
@@ -63,28 +59,25 @@ export const ViewTask = () => {
       return noDataAvailable;
     }
 
-    const handler = Meteor.subscribe('tasks-todo', page, queryString);
+    const handler = Meteor.subscribe('tasks-todo', page, queryString,concludedTasks);
 
     if (!handler.ready()) {
       return { ...noDataAvailable, isLoading: true };
     }
 
-    //const limit = 4;
-    //const skip = (i-1)*limit;
 
     const tasks = TasksCollection.find().fetch();
-    console.log(tasks);
-    //const tasks = TasksCollection.find({}, {limit:4,skip:page+2}).fetch();
-
+    //const tasks = TasksCollection.find({sort: {createdAt : -1}});
+    
     return { tasks };
 
   });
-
+  //console.log(tasks)
   //Meteor.subscribe('pagination', page);
 
 
   return (
-    <div>
+    <div className={classes.root}>
       <PersistentDrawer />
 
 
@@ -95,13 +88,17 @@ export const ViewTask = () => {
         component="h2"
         align="center"
       >Click on the task to see more Details</Typography>
+      
       <FormControlLabel
-        control={<Checkbox //checked={state.checkedA} 
-          //onChange={handleChange} 
+        control={<Checkbox 
+          //checked={state.checkedA} 
+          onChange={()=>{setConcludedTasks(!concludedTasks)}}
           name="checkedA" />}
-        label="Show all tasks included Concluded tasks"
+        label="Show all tasks,  included Concluded tasks "
       />
+      
       <br />
+      
       <TextField
         name="queryString"
         type="text"
@@ -112,13 +109,7 @@ export const ViewTask = () => {
       />
       {isLoading && <div className="loading">loading...</div>}
 
-      {tasks.filter((task) => {
-        if (queryString === "") {
-          return task
-        } else if (task.text.includes(queryString)) {
-          return task
-        }
-      }).map(task => <Task
+      {tasks.map(task => <Task
         key={task._id}
         task={task}
         onDeleteClick={deleteTask}
@@ -126,13 +117,14 @@ export const ViewTask = () => {
 
       }
       <br />
-      <Pagination count={n_page}
+      <Pagination count={total}
         onChange={(e, value) => setPage(value)}
       />
       <br />
-      <Button variant="outlined"
-        color="primary"
-        className="button-space"
+
+      <Button variant="contained"
+      color="primary"
+      
         onClick={() => { history.push('/add-task') }}
       >
 
@@ -142,8 +134,8 @@ export const ViewTask = () => {
       </Button>
 
       <Button variant="contained"
-        color="default"
-        className={classes.root}
+       
+        
         onClick={() => { history.push('/') }}
       >
 
