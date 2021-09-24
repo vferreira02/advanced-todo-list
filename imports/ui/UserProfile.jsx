@@ -181,7 +181,12 @@ export const UserProfile = () => {
 
 
       </List>
-      <Button type="submit">Save Alterations</Button>
+      <Button 
+      style={{margin : 10}}
+      variant="contained"
+      color="primary"
+      type="submit">Save Alterations</Button>
+      
       <Button onClick={() => { history.push('/') }}>Back</Button>
 
     </form>
