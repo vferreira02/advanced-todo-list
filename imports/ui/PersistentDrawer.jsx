@@ -17,6 +17,10 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
+import HomeIcon from '@material-ui/icons/Home';
+import PersonIcon from '@material-ui/icons/Person';
+import { useHistory } from 'react-router';
+import { Link } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -78,6 +82,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function PersistentDrawer() {
+  const history = useHistory();
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -128,8 +133,23 @@ export default function PersistentDrawer() {
             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </div>
-        <Divider />
-        
+        <Divider/>
+        <List>
+          <ListItem>
+          <ListItemIcon>
+          <HomeIcon/>
+          </ListItemIcon>
+          <ListItemText>Home</ListItemText>
+        </ListItem>
+        <Divider/>
+        <ListItem>
+          <ListItemIcon>
+          <PersonIcon/>
+          </ListItemIcon>
+          <ListItemText>Profile</ListItemText>
+        </ListItem>
+        </List>
+        <Divider/>
       </Drawer>
     </div>
   );

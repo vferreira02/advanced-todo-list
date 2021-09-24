@@ -16,7 +16,7 @@ import {
   Avatar
 } from '@material-ui/core';
 import { useHistory } from 'react-router';
-import {PersistentDrawer} from './PersistentDrawer';
+import PersistentDrawer from './PersistentDrawer';
 
 
 
@@ -106,8 +106,9 @@ export const UserProfile = () => {
 
   return (
     <>
+    <PersistentDrawer/>
     <div>
- 
+    <br/><br/><br/><br/>
     <Container>
    
     <form onSubmit={handleSubmit}>

@@ -1,26 +1,59 @@
 import {Meteor} from 'meteor/meteor';
-import React, {useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import {useTracker} from 'meteor/react-meteor-data';
-import { Button, Checkbox, FormGroup, FormControlLabel } from '@material-ui/core';
+import { Button, Checkbox, FormGroup, FormControlLabel, TextField, Grid, List, makeStyles} from '@material-ui/core';
+import PersistentDrawer from './PersistentDrawer';
+
+const useStyle  = makeStyles( theme => ({
+  
+    root:{
+
+    '& .MuiFormControl-root' : {
+     width: '90%',
+
+      margin: theme.spacing(2)
+
+    },
+
+    '& .MuiButtonBase-root' : {
+      margin : theme.spacing(2),
+     
+    }
+
+  }
+
+}));
+
+
+
 
 
 export const TaskForm = () => {
 
+    const classes = useStyle();
+
     const user=useTracker(() => Meteor.user());
 
-    let username_db = user.username;
+
+    //const username_db = user.username;
     
 
     const history = useHistory();
     
+    const [init, setInit] = useState(false);
     const [text, setText] = useState('');
     const [description, setDescription] = useState('');
     const [status, setStatus] = useState("Registered");
     const [personal, setPersonal]=useState(false);
- 
-    const username = username_db;
+    const [username, setUsername] = useState('');
+    //const username = username_db;
     
+    useEffect(()=>{
+        if(user && !init){
+        setUsername(user.username);
+        }
+    },[user])
     
     const handleSubmit = e => {
         e.preventDefault();
@@ -41,19 +74,24 @@ export const TaskForm = () => {
     };
 
     return (
-        <form className="task-form" onSubmit={handleSubmit}>
-            <input 
-            type="text" 
-            placeholder="Type to add new tasks"
-            value={text}
-            onChange={e => setText(e.target.value)}
-            />
-            <input
-            type="textarea"
-            placeholder="Type here the description"
-            value={description}
-            onChange={e=>setDescription(e.target.value)}           
-            />
+        <>
+        <PersistentDrawer/>
+        <br/> <br/> <br/> <br/>  <br/>  <br/>
+        <form className={classes.root} onSubmit={handleSubmit}>
+            <Grid>
+                <List>
+                    <TextField 
+                    type="text" 
+                    placeholder="Type to add new tasks"
+                    value={text}
+                    onChange={e => setText(e.target.value)}
+                    />
+                    <TextField
+                    type="textarea"
+                    placeholder="Type here the description"
+                    value={description}
+                    onChange={e=>setDescription(e.target.value)}           
+                    />
 
                     <FormGroup row>
                         <FormControlLabel
@@ -70,8 +108,21 @@ export const TaskForm = () => {
                     </FormGroup>
             
            
-        <Button type="submit">Add Task</Button>
+        <Button type="submit"
+        color="primary"
+        variant="contained"
+        >Add Task</Button>
+        <Button
+          onClick={ () => history.push("/view-task") }
+          >
+          
+          Back
+
+          </Button>
+        </List>
+        </Grid>
         </form>
+        </>
     );
 };
 

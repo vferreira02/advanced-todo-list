@@ -9,8 +9,9 @@ import PersistentDrawer from './PersistentDrawer';
 
 
 
-
 export const Details = () => {
+
+
 
     const {id} = useParams();
 
@@ -136,6 +137,9 @@ export const Details = () => {
             
 
             <Button 
+            style={{margin: 10,}}
+            variant="contained"
+            color = "primary"
             onClick = {() => {history.push("/view-task")}}
             > 
                
@@ -144,6 +148,8 @@ export const Details = () => {
             </Button>
 
             <Button
+            variant="contained"
+            color = "secondary"
             onClick = {() => history.push(`/edit-task/${task._id}`)}
             >
                Edit

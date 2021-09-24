@@ -6,6 +6,7 @@ import {useTracker} from 'meteor/react-meteor-data';
 //IMPORTATIONS OF MATERIAL 
 
 import { Button, Checkbox, FormGroup, FormControlLabel, TextField, List, Grid, makeStyles } from '@material-ui/core';
+import PersistentDrawer from './PersistentDrawer';
 
 const useStyle  = makeStyles( theme => ({
   
@@ -100,6 +101,9 @@ export const EditForm = () => {
     };
 
     return (
+      <>
+      <PersistentDrawer/>
+      <br/><br/><br/><br/><br/>
         <form className={classes.root} onSubmit={handleSubmit} >
            <Grid>
             <List>
@@ -150,7 +154,7 @@ export const EditForm = () => {
         </List>
         </Grid>
         </form>
-       
+      </> 
     );
 };
 
