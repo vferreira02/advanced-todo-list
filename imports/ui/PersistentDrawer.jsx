@@ -135,14 +135,20 @@ export default function PersistentDrawer() {
         </div>
         <Divider/>
         <List>
-          <ListItem>
+          <ListItem 
+          style={{cursor: 'pointer'}}
+          onClick={()=>{history.push('/')}}
+          >
           <ListItemIcon>
           <HomeIcon/>
           </ListItemIcon>
           <ListItemText>Home</ListItemText>
         </ListItem>
         <Divider/>
-        <ListItem>
+        <ListItem
+        style={{cursor: 'pointer'}}
+        onClick={()=>{history.push('/user-profile')}}
+        >
           <ListItemIcon>
           <PersonIcon/>
           </ListItemIcon>
